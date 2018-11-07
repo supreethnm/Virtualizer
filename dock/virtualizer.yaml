@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  virtualizer:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    command:
+      - ./virtualizer
+    links:
+      - mongodb
+    ports:
+      - '8080:8080'
+  mongodb:
+    image: 'mongo:latest'
+    container_name: mongodb
+    environment:
+      - MONGO_DATA_DIR=/var/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - './data/db:/var/db/mongo'
+    ports:
+      - '27017:27017'
+    command: 'mongod --smallfiles'

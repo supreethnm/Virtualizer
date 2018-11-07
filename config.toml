@@ -1,0 +1,68 @@
+
+[[services]]
+sname="Service1"
+path="/EndPoint1"
+method="get"
+[[services.operations]]
+database="test"
+collection="service1"
+delay=0
+[[services.operations.outputs]]
+reference="""
+{
+"ipAddress": "ipAddress"
+}
+"""
+omit=["ipAddress"]
+response="""
+{
+"status":"failed"
+}
+"""
+
+# -------------------------------------------------------------------------------------------
+
+[[services]]
+sname="Service2"
+path="/EndPoint2"
+method="post"
+[[services.operations]]
+delay=0
+database="test"
+collection="service2"
+[[services.operations.outputs]]
+reference="""
+{
+"service2.accountNumber": "service2.accountNumber", 
+"service2.siteCode": "service2.siteCode"
+}
+"""
+response="""
+{
+"status":"failed"
+}
+"""
+
+# -------------------------------------------------------------------------------------------
+
+[[services]]
+sname="XMLService"
+path="/abc"
+type="text/xml"
+method="post"
+
+[[services.operations]]
+database="test"
+collection="abc"
+delay=0
+[[services.operations.outputs]]
+reference="""
+{
+"ABCMessage.Body.Customer.Account.-id": "ABCMessage.Body.Customer.Account.-id", 
+}
+"""
+response="""
+{
+"status":"failed"
+}
+"""
