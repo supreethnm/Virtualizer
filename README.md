@@ -83,17 +83,13 @@ response="""
                                         For XML, assign the value "text/xml" or "application/xml".
                                         For JSON, assign the value "text/json" or "application/json"
 
-"method"                            :   Tag that specifies HTTP method user intend to setup for a service 
-
-"[[services.operations]]"           :   Tag used to indicate Virtualizer the operation(s) in a service
+"method"                            :   Tag that specifies HTTP method user intend to setup for a service
 
 "database"                          :   To specify the database where Virtualizer can find the response(s), Collection name shoule also be specified under "collection" tag.
 
 "collection"                        :   Collection/Table name where Virtualizer can find the response
 
 "delay"                             :   Intended delay for getting the response
-
-"[[services.operations.outputs]]"   :   Tag used for defining the output related params
 
 "references"                        :   To map keys in the request to a response (to be specified in JSON format)
                                         Should specify the quick path to the keys of request and response
