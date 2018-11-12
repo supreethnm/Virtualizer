@@ -29,15 +29,13 @@ INFO[0000] Listening on port 8080
 A Sample config.toml file that creates Service1, Service2 services:
 
 ```
-[[services]]
+[services]]
 sname="Service1"
 path="/EndPoint1"
 method="get"
-[[services.operations]]
 database="test"
 collection="service1"
 delay=0
-[[services.operations.outputs]]
 reference="""
 {
 "ipAddress": "ipAddress"
@@ -50,16 +48,15 @@ response="""
 }
 """
 
+# -------------------------------------------------------------------------------------------
 
 [[services]]
 sname="Service2"
 path="/EndPoint2"
 method="post"
-[[services.operations]]
 delay=0
 database="test"
 collection="service2"
-[[services.operations.outputs]]
 reference="""
 {
 "service2.accountNumber": "service2.accountNumber", 

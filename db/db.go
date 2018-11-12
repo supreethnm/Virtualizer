@@ -7,12 +7,13 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
+	cn "virtualizer/constants"
 	u "virtualizer/utils"
 )
 
 func connect() (session *mgo.Session, err error) {
 
-	connectURL := "localhost"
+	connectURL := cn.MONGO_DB_HOST
 	session, err = mgo.Dial(connectURL)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{}).Panic("Can't connect to mongo, go error: " + err.Error() + "\n")
@@ -38,7 +39,7 @@ func GetData(db string, collection string, condition []bson.M) (result string, e
 	var all []bson.M
 	var bytes []byte
 	if condition != nil {
-		err = c.Find(bson.M{"$and": condition}).One(&m)
+		err = c.Find(bson.M{cn.MONGO_DB_AND_OPERATOR: condition}).One(&m)
 		if err != nil {
 			return "", err
 		}
@@ -46,7 +47,7 @@ func GetData(db string, collection string, condition []bson.M) (result string, e
 		// remove id
 		resp := make(map[string]interface{})
 		for k, v := range m {
-			if k != "_id" {
+			if k != cn.MONGO_DB_FIELD_ID {
 				resp[k] = v
 			}
 		}
@@ -64,7 +65,7 @@ func GetData(db string, collection string, condition []bson.M) (result string, e
 
 		var resp []map[string]interface{}
 		for _, obj := range all {
-			delete(obj, "_id")
+			delete(obj, cn.MONGO_DB_FIELD_ID)
 			resp = append(resp, obj)
 		}
 
