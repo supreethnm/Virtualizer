@@ -42,6 +42,24 @@ func PostHandler(service c.Service) http.HandlerFunc {
 			}
 		}
 
+		// check for config update
+		if strings.Contains(r.URL.Path, cn.CONFIG_ENDPOINT_UPDATE_CONFIG) {
+			logrus.WithFields(logrus.Fields{"data": string(reqBodyBytes)}).Info("Updating virtualizer config...")
+			err = ioutil.WriteFile(cn.CONFIG_FILE, reqBodyBytes, 0755)
+			if err != nil {
+				errString := "Unable to update virtualizer config file: " + err.Error()
+				logrus.WithFields(logrus.Fields{}).Error(errString)
+				http.Error(w, errString, http.StatusInternalServerError)
+				return
+			}
+			logrus.WithFields(logrus.Fields{}).Info("Successfully updated virtualizer config")
+			w.WriteHeader(http.StatusCreated)
+			infoStr := "Please restart your service/docker to reflect the updated config changes!"
+			w.Write([]byte(infoStr))
+			logrus.WithFields(logrus.Fields{}).Info(infoStr)
+			return
+		}
+
 		// check if the request is for db insert
 		if strings.Contains(r.URL.Path, cn.DB_ENDPOINT_INSERT_DATA) {
 			var row map[string]interface{}
@@ -147,6 +165,21 @@ func GetHandler(service c.Service) http.HandlerFunc {
 			}
 			w.Header().Add(cn.STRING_CONTENT_TYPE, cn.STRING_APPLICATION_JSON)
 			fmt.Fprintf(w, result)
+			return
+		}
+
+		// check for config update
+		if strings.Contains(r.URL.Path, cn.CONFIG_ENDPOINT_GET_CONFIG) {
+			data, err := ioutil.ReadFile(cn.CONFIG_FILE)
+			if err != nil {
+				errString := "Error in reading virtualizer config file: " + err.Error()
+				logrus.WithFields(logrus.Fields{}).Error(errString)
+				http.Error(w, errString, http.StatusInternalServerError)
+				return
+			}
+			logrus.WithFields(logrus.Fields{"data": string(data)}).Info("virtualizer config file data")
+			w.WriteHeader(http.StatusOK)
+			w.Write(data)
 			return
 		}
 

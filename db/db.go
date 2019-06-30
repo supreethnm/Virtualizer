@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"os"
 
 	"github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
@@ -13,7 +14,7 @@ import (
 
 func connect() (session *mgo.Session, err error) {
 
-	connectURL := cn.MONGO_DB_HOST
+	connectURL := os.Getenv("MONGO_DB_URL")
 	session, err = mgo.Dial(connectURL)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{}).Panic("Can't connect to mongo, go error: " + err.Error() + "\n")
@@ -94,6 +95,7 @@ func InsertRow(row map[string]interface{}, dbName string, collectionName string)
 	if err != nil {
 		return err
 	}
+	logrus.WithFields(logrus.Fields{"data": row}).Info("Inserted to db")
 	return nil
 }
 
@@ -110,6 +112,6 @@ func Delete(db string, collection string, condition bson.M) (err error) {
 	if err != nil {
 		return err
 	}
-	logrus.WithFields(logrus.Fields{"Matched": info.Matched, "Deleted": info.Removed, "Updated": info.Updated}).Debug("Deleted from db")
+	logrus.WithFields(logrus.Fields{"Matched": info.Matched, "Deleted": info.Removed, "Updated": info.Updated}).Info("Deleted from db")
 	return nil
 }

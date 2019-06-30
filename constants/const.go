@@ -2,9 +2,24 @@ package constants
 
 const (
 	// Mongo DB
-	MONGO_DB_HOST         = "localhost"
 	MONGO_DB_FIELD_ID     = "_id"
 	MONGO_DB_AND_OPERATOR = "$and"
+
+	CONFIG_ENDPOINT = `
+	[[services]]
+    sname="Virtualizer"
+    path="/updateConfig"
+    type="text"
+	method="post"
+	
+	[[services]]
+    sname="JSONservice"
+    path="/getConfig"
+    type="text"
+    method="get"
+	`
+	CONFIG_ENDPOINT_UPDATE_CONFIG = "updateConfig"
+	CONFIG_ENDPOINT_GET_CONFIG    = "getConfig"
 
 	DB_ENDPOINTS = `
     [[services]]
@@ -24,7 +39,7 @@ const (
     path="/delete"
     type="text/json"
     method="delete"
-    `
+	`
 	DB_ENDPOINT_INSERT_DATA = "insertData"
 	DB_ENDPOINT_GET_DATA    = "getData"
 	DB_ENDPOINT_DELETE_DATA = "delete"
@@ -34,7 +49,7 @@ const (
 	STRING_COLLECTION = "collection"
 
 	// Config
-	CONFIG_FILE = "config.toml"
+	CONFIG_FILE = "/tmp/virtualizer/config.toml"
 	PORT        = "8080"
 
 	// HTTP vars
