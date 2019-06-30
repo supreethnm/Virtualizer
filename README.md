@@ -2,27 +2,156 @@
 Used for mocking REST based services
 
 ### How to run the Virtualizer:
-1. Make sure we have Virtualizer executable in place
-2. Make sure the config.toml file is in the same directory of Virtualizer executable (Virtualizer will read this config.toml file)
-3. Run the Virtualizer executable. An example is shown below
+First, we need to download the virtualizer source
+#### As a docker image using source:
+1. Navigate to $virtualizer/dock
+2. Run the docker image using below command:
+```
+$docker-compose -f virtualizer.yaml up
+```
+#### As a local instance:
+1. Make sure we have Virtualizer executable in place 
+    We can always build one from the source using GO (with below example command):
+    $ go build -o virtualizer main/main.go
+2. Run the Virtualizer executable. An example is shown below
 Example:
 ```
 $ ./virtualizer
-INFO[0000] Request for GET /EndPoint1 
-INFO[0000] Request for POST /EndPoint2
 INFO[0000] Request for POST /insertData                 
 INFO[0000] Request for GET /getData                     
 INFO[0000] Request for DELETE /delete                   
-INFO[0000] Endpoint created at path: /EndPoint1
-INFO[0000] Endpoint created at path: /EndPoint2
+INFO[0000] Request for POST /updateConfig               
+INFO[0000] Request for GET /getConfig                   
 INFO[0000] Endpoint created at path: /insertData        
 INFO[0000] Endpoint created at path: /getData           
 INFO[0000] Endpoint created at path: /delete            
-INFO[0000] Listening on port 8080
+INFO[0000] Endpoint created at path: /updateConfig      
+INFO[0000] Endpoint created at path: /getConfig
 ```
 
 **NOTE: Virtualizer needs a mongo db running in the background WITH NO CREDENTIALS setup**
 
+## Getting virtualizer config file (config.toml)
+Here is the cURL is used for getting the contents of config file the virtualizer is reading. Below example shows the a sample content if virtualizer cannot find the config.toml file:
+```
+$curl -X GET http://localhost:8080/getConfig
+
+	# config.toml not found in config directory
+	# Below is a sample content.
+
+	[[services]]
+	sname="Service1"
+	path="/path/to/service1"
+	type="text/json"
+	method="get"
+	database="testdb"
+	collection="testcol"
+	delay=0
+	reference="""
+	{
+		"json_key": "json_value"
+	}
+	"""
+	omit=["any_json_field"]
+	response="""
+	{
+		"message" : "default message"
+	}
+	"""
+
+	# -------------------------------------------------------------------------------------------
+
+	[[services]]
+	sname="Service2"
+	path="/path/to/service2"
+	type="text/json"
+	method="get"
+	delay=0
+	database="testdb"
+	collection="testcol2"
+	reference="""
+	{
+		"json_key": "json_value"
+	}
+	"""
+	response="""
+	{
+		"message" : "default message"
+	}
+	"""
+
+	# -------------------------------------------------------------------------------------------
+
+	[[services]]
+	sname="XMLService"
+	path="/path/to/xmlservice"
+	type="text/xml"
+	method="post"
+	database="testdb"
+	collection="testcol3"
+	delay=0
+	reference="""
+	{
+	"RootObject.Body.Element": "RootObject.Body.Element",
+	}
+	"""
+	response="""
+	{
+		"message" : "default message"
+	}
+	"""
+``` 
+
+## Updating virtualizer config file (config.toml)
+Below cURL is used for updating the virtualizer config.
+**NOTE: Please restart your service/docker to reflect the updated config changes**
+```
+$ curl -X POST http://localhost:8080/updateConfig \
+  -H 'Accept: */*' \
+  -H 'Content-Type: text/plain'\
+  -d '
+	[[services]]
+	sname="MyService1"
+	path="/path/to/service1"
+	type="text/json"
+	method="get"
+	database="mydb"
+	collection="mycol"
+	delay=0
+	reference="""
+	{
+		"json_key": "json_value"
+	}
+	"""
+	omit=["any_json_field"]
+	response="""
+	{
+		"message" : "default message"
+	}
+	"""
+
+	# -------------------------------------------------------------------------------------------
+
+	[[services]]
+	sname="MyService2"
+	path="/path/to/service2"
+	type="text/json"
+	method="get"
+	delay=0
+	database="mydb"
+	collection="mycol2"
+	reference="""
+	{
+		"json_key": "json_value"
+	}
+	"""
+	response="""
+	{
+		"message" : "default message"
+	}
+	"""
+'
+```
 
 ## Config.toml file:
 

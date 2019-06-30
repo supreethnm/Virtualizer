@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -49,4 +50,14 @@ func BytesToString(data []byte) string {
 func AddDelay(delay time.Duration, ch chan<- bool) {
 	time.Sleep(delay * time.Second)
 	ch <- true
+}
+
+func GetTempDir() string {
+	return os.TempDir()
+}
+
+func GetConfigFilePath() string {
+	configFilePath := GetTempDir() + "/virtualizer/config.toml"
+	logrus.WithFields(logrus.Fields{"config file": configFilePath}).Debug("config.toml file location")
+	return configFilePath
 }

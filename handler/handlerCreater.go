@@ -45,7 +45,7 @@ func PostHandler(service c.Service) http.HandlerFunc {
 		// check for config update
 		if strings.Contains(r.URL.Path, cn.CONFIG_ENDPOINT_UPDATE_CONFIG) {
 			logrus.WithFields(logrus.Fields{"data": string(reqBodyBytes)}).Info("Updating virtualizer config...")
-			err = ioutil.WriteFile(cn.CONFIG_FILE, reqBodyBytes, 0755)
+			err = ioutil.WriteFile(u.GetConfigFilePath(), reqBodyBytes, 0755)
 			if err != nil {
 				errString := "Unable to update virtualizer config file: " + err.Error()
 				logrus.WithFields(logrus.Fields{}).Error(errString)
@@ -170,11 +170,12 @@ func GetHandler(service c.Service) http.HandlerFunc {
 
 		// check for config update
 		if strings.Contains(r.URL.Path, cn.CONFIG_ENDPOINT_GET_CONFIG) {
-			data, err := ioutil.ReadFile(cn.CONFIG_FILE)
+			data, err := ioutil.ReadFile(u.GetConfigFilePath())
 			if err != nil {
 				errString := "Error in reading virtualizer config file: " + err.Error()
 				logrus.WithFields(logrus.Fields{}).Error(errString)
-				http.Error(w, errString, http.StatusInternalServerError)
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(cn.DEFAULT_CONFIG_STRING))
 				return
 			}
 			logrus.WithFields(logrus.Fields{"data": string(data)}).Info("virtualizer config file data")

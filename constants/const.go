@@ -48,9 +48,11 @@ const (
 	STRING_DATABASE   = "database"
 	STRING_COLLECTION = "collection"
 
-	// Config
-	CONFIG_FILE = "/tmp/virtualizer/config.toml"
-	PORT        = "8080"
+	// TODO: provide flexibility for users to use other ports
+	PORT = "8080"
+
+	// TODO: revisit config file location
+	//CONFIG_FILE = "/tmp/virtualizer/config.toml"
 
 	// HTTP vars
 	HTTP_METHOD_POST   = "POST"
@@ -61,4 +63,72 @@ const (
 	STRING_CONTENT_TYPE     = "content-type"
 	STRING_XML              = "xml"
 	STRING_APPLICATION_JSON = "application/json"
+
+	// Default config string
+	DEFAULT_CONFIG_STRING = `
+# config.toml not found in config directory
+# Below is a sample content.
+
+[[services]]
+sname="Service1"
+path="/path/to/service1"
+type="text/json"
+method="get"
+database="testdb"
+collection="testcol"
+delay=0
+reference="""
+{
+	"json_key": "json_value"
+}
+"""
+omit=["any_json_field"]
+response="""
+{
+	"message" : "default message"
+}
+"""
+
+# -------------------------------------------------------------------------------------------
+
+[[services]]
+sname="Service2"
+path="/path/to/service2"
+type="text/json"
+method="get"
+delay=0
+database="testdb"
+collection="testcol2"
+reference="""
+{
+	"json_key": "json_value"
+}
+"""
+response="""
+{
+	"message" : "default message"
+}
+"""
+
+# -------------------------------------------------------------------------------------------
+
+[[services]]
+sname="XMLService"
+path="/path/to/xmlservice"
+type="text/xml"
+method="post"
+database="testdb"
+collection="testcol3"
+delay=0
+reference="""
+{
+"RootObject.Body.Element": "RootObject.Body.Element",
+}
+"""
+response="""
+{
+	"message" : "default message"
+}
+"""
+`
 )

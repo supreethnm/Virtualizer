@@ -14,7 +14,11 @@ import (
 
 func connect() (session *mgo.Session, err error) {
 
-	connectURL := os.Getenv("MONGO_DB_URL")
+	connectURL, exists := os.LookupEnv("MONGO_DB_URL")
+	if !exists {
+		// user local instance of mongodb if env variable not set
+		connectURL = "localhost"
+	}
 	session, err = mgo.Dial(connectURL)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{}).Panic("Can't connect to mongo, go error: " + err.Error() + "\n")

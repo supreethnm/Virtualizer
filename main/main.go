@@ -11,15 +11,17 @@ import (
 	c "virtualizer/configuration"
 	cn "virtualizer/constants"
 	r "virtualizer/route"
+	u "virtualizer/utils"
 )
 
 func main() {
 
 	logrus.SetLevel(logrus.DebugLevel)
 	var config c.Config
-	if _, err := toml.DecodeFile(cn.CONFIG_FILE, &config); err != nil {
+	configFile := u.GetConfigFilePath()
+	if _, err := toml.DecodeFile(configFile, &config); err != nil {
 		logrus.WithFields(logrus.Fields{}).Error(err.Error())
-		//panic(err)
+		logrus.WithFields(logrus.Fields{}).Info("No config.toml found in '" + configFile + "' using default endpoints")
 	} //For TOML
 
 	var dbConfig c.Config
