@@ -4,11 +4,11 @@ Used for mocking REST based services
 ### How to run the Virtualizer:
 First, we need to download the virtualizer source
 #### As a docker image using source:
-1. Copy the YAML content from the below link into your local "virtualizer.yaml" file:
+1. Copy below YAML content to your local "virtualizer.yaml" file:
     https://cloud.docker.com/repository/docker/supreethnm/virtualizer/general
 2. Execute below command:
 ```
-$docker-compose -f virtualizer.yaml up
+docker-compose -f virtualizer.yaml up
 ```
 #### As a local instance:
 1. Make sure we have Virtualizer executable in place 
